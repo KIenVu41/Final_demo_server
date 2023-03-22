@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class Song {
-    private int id;
+    private String docId;
     private String artist;
     private Boolean featured;
     private int count;

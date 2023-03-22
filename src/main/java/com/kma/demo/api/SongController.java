@@ -34,31 +34,12 @@ public class SongController {
         return ResponseEntity.status(500).build();
     }
 
-    @GetMapping("/songs/latest")
-    public ResponseEntity<Song> getSong() {
-        try {
-            Song song = songService.fetchData();
-            if (song == null) {
-                return ResponseEntity.notFound().build();
-            } else {
-                return ResponseEntity.ok(song);
-            }
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return ResponseEntity.status(500).build();
-    }
-
     @GetMapping("/update")
-    public ResponseEntity<Integer> update() {
+    public ResponseEntity<Integer> updateCount(@RequestParam String id) {
         try {
-            songService.update("");
-            return ResponseEntity.ok(1);
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+            int count = songService.updateCount(id);
+            return ResponseEntity.ok(count);
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return ResponseEntity.status(500).build();

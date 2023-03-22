@@ -37,24 +37,10 @@ public class SongService {
         for (QueryDocumentSnapshot document : documents) {
             Song song = new Song();
             song = document.toObject(Song.class);
+            song.setDocId(document.getId());
             songs.add(song);
         }
         return songs;
-    }
-
-    public Song fetchData() throws ExecutionException, InterruptedException {
-        Firestore db = FirestoreClient.getFirestore();
-
-        DocumentReference documentReference = db.collection("songs").document("FRJdzjfYVmCctwQdG85G1");
-
-        ApiFuture<DocumentSnapshot> future = documentReference.get();
-
-        DocumentSnapshot document = future.get();
-
-        Song song = null;
-
-
-        return null;
     }
 
     public byte[] download(String urlStr) throws IOException {
@@ -67,18 +53,18 @@ public class SongService {
             }
             return dataBuffer;
         } catch (IOException e) {
-            // handle exception
+            e.printStackTrace();
         }
         return null;
     }
 
-    public void update(String id) throws ExecutionException, InterruptedException {
+    public int updateCount(String id) throws ExecutionException, InterruptedException {
         Firestore db = FirestoreClient.getFirestore();
-        DocumentReference docRef = db.collection("songs").document("FRJdzjfYVmCctwQdG85G");
+        DocumentReference docRef = db.collection("songs").document(id);
+        docRef.update("count", FieldValue.increment(1));
 
-        ApiFuture<WriteResult> future = docRef.update("count", 21);
-
-        WriteResult result = future.get();
-        System.out.println("Write result: " + result);
+        ApiFuture<DocumentSnapshot> future = docRef.get();
+        DocumentSnapshot document = future.get();
+        return document.toObject(Song.class).getCount();
     }
 }
