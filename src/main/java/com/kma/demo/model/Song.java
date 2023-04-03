@@ -2,8 +2,10 @@ package com.kma.demo.model;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class Song {
+public class Song implements Serializable {
     private String docId;
     private String artist;
     private Boolean featured;
