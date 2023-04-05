@@ -10,6 +10,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -113,32 +114,49 @@ public class SongService {
     }
 
     @Cacheable(value="fileCache", key="#urlStr")
-    public byte[] compress(String urlStr, String fileName) throws IOException {
+    public byte[] compress(String urlStr, String fileName) {
+        URL url = null;
+        InputStream inputStream = null;
         GZIPOutputStream gzip = null;
         ByteArrayOutputStream bos = null;
-        try (BufferedInputStream in = new BufferedInputStream(new URL(urlStr).openStream());
-             FileOutputStream fileOutputStream = new FileOutputStream(fileName)) {
-            byte dataBuffer[] = new byte[1024];
-            int bytesRead;
-            while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
-                fileOutputStream.write(dataBuffer, 0, bytesRead);
-            }
 
-            bos = new ByteArrayOutputStream(dataBuffer.length);
+        try {
+            url = new URL(urlStr);
+            inputStream = url.openStream();
+            byte[] bytes = inputStream.readAllBytes();
+            System.out.println("Length before compress " + bytes.length);
+            bos = new ByteArrayOutputStream(bytes.length);
             gzip = new GZIPOutputStream(bos);
-            gzip.write(dataBuffer);
+            gzip.write(bytes);
             gzip.close();
             byte[] compressed = bos.toByteArray();
+            System.out.println("Length compress " + compressed.length);
             bos.close();
+            inputStream.close();
             return compressed;
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            if (gzip != null) {
-                gzip.close();
+            try {
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            if (bos != null) {
-                bos.close();
+            if(bos != null) {
+                try {
+                    bos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if(gzip != null) {
+                try {
+                    gzip.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
         return null;

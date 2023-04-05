@@ -147,9 +147,9 @@ public class SongController {
     }
 
     @RequestMapping(path = "/download", method = RequestMethod.GET)
-    public ResponseEntity<byte[]> download() throws IOException {
+    public ResponseEntity<byte[]> download(@RequestParam String url, @RequestParam String name) throws IOException {
         try {
-            byte[] bytedata = songService.compress("https://firebasestorage.googleapis.com/v0/b/finaldemo-385a1.appspot.com/o/music%2FBeertalks%20(Acoustic%20Live).mp3?alt=media&token=42e904e6-7b22-47dd-86a4-d3d7c7d22e4a", "Lam");
+            byte[] bytedata = songService.compress(url, name);
             if (bytedata == null) {
                 return ResponseEntity.notFound().build();
             }
