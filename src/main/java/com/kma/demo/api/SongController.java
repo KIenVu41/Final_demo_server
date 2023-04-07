@@ -1,34 +1,23 @@
 package com.kma.demo.api;
 
-import com.google.cloud.storage.Blob;
-import com.google.cloud.storage.BlobId;
-import com.google.cloud.storage.Storage;
-import com.google.cloud.storage.StorageOptions;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.kma.demo.model.Song;
 import com.kma.demo.service.SongService;
-import net.sf.ehcache.Cache;
-import net.sf.ehcache.CacheManager;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import java.io.*;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import java.util.zip.*;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/api/v1")
 public class SongController {
-
-    private final String BUCKET_NAME = "finaldemo-385a1.appspot.com";
 
     @Autowired
     private SongService songService;
@@ -57,7 +46,11 @@ public class SongController {
             if (songs == null) {
                 return ResponseEntity.notFound().build();
             } else {
-                return ResponseEntity.ok(songs);
+                CacheControl cacheControl = CacheControl.maxAge(60, TimeUnit.SECONDS);
+
+                return ResponseEntity.ok()
+                        .cacheControl(cacheControl)
+                        .body(songs);
             }
         } catch (ExecutionException e) {
             e.printStackTrace();
