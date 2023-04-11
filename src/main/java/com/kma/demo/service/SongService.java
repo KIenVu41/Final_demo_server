@@ -6,6 +6,9 @@ import com.google.cloud.storage.Bucket;
 import com.google.firebase.cloud.FirestoreClient;
 import com.google.firebase.cloud.StorageClient;
 import com.kma.demo.model.Song;
+import org.ehcache.Cache;
+import org.ehcache.CacheManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -44,6 +47,7 @@ public class SongService {
         return songs;
     }
 
+    @Cacheable(value = "fileCache", key = "")
     public List<Song> pagination(int page) throws ExecutionException, InterruptedException {
         Firestore db = FirestoreClient.getFirestore();
         List<QueryDocumentSnapshot> documents = null;
@@ -190,8 +194,10 @@ public class SongService {
         return document.toObject(Song.class).getCount();
     }
 
+    @Cacheable(value = "home")
     public List<Song> findHomeData() throws ExecutionException, InterruptedException {
         List<Song> songs = new ArrayList<>();
+
         songs.addAll(findBannerSong());
         songs.addAll(findLatestSong());
         songs.addAll(findPopularSong());

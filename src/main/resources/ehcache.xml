@@ -1,14 +1,23 @@
+<!--<config xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'-->
+<!--        xmlns='http://www.ehcache.org/v3'-->
+<!--        xsi:schemaLocation="http://www.ehcache.org/v3 http://www.ehcache.org/schema/ehcache-core-3.8.xsd">-->
+
+<!--    <cache alias="myCache">-->
+<!--        <key-type>java.lang.String</key-type>-->
+<!--        <value-type>java.util.List</value-type>-->
+<!--        <expiry>-->
+<!--            <ttl unit="seconds">300</ttl>-->
+<!--        </expiry>-->
+<!--        <resources>-->
+<!--            <heap unit="entries">1000</heap>-->
+<!--        </resources>-->
+<!--    </cache>-->
+<!--</config>-->
 <ehcache>
-    <diskStore path="java.io.tmpdir"/>
-    <defaultCache maxElementsInMemory="10000" eternal="false"
-                  timeToIdleSeconds="120" timeToLiveSeconds="120"
-                  overflowToDisk="true" diskPersistent="false"
-                  diskExpiryThreadIntervalSeconds="120"
-                  memoryStoreEvictionPolicy="LRU"/>
-    <cache name="fileCache"
-           maxElementsInMemory="10000" eternal="false"
-           timeToIdleSeconds="120" timeToLiveSeconds="120"
-           overflowToDisk="true" diskPersistent="false"
-           diskExpiryThreadIntervalSeconds="120"
-           memoryStoreEvictionPolicy="LRU"/>
+    <cache name="myCache"
+           maxEntriesLocalHeap="10000"
+           eternal="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600">
+    </cache>
 </ehcache>

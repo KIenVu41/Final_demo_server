@@ -46,10 +46,7 @@ public class SongController {
             if (songs == null) {
                 return ResponseEntity.notFound().build();
             } else {
-                CacheControl cacheControl = CacheControl.maxAge(60, TimeUnit.SECONDS);
-
                 return ResponseEntity.ok()
-                        .cacheControl(cacheControl)
                         .body(songs);
             }
         } catch (ExecutionException e) {

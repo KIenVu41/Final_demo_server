@@ -2,29 +2,30 @@ package com.kma.demo.config;
 
 
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.cache.ehcache.EhCacheCacheManager;
-import org.springframework.cache.ehcache.EhCacheManagerFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ClassPathResource;
 
+import java.time.Duration;
 import java.util.Objects;
 
-@Configuration
-@EnableCaching
+//@Configuration
+//@EnableCaching
 public class CacheConfig {
 
-    @Bean
-    public EhCacheCacheManager cacheManager() {
-        return new EhCacheCacheManager(Objects.requireNonNull(ehCacheManager().getObject()));
-    }
-
-    @Bean
-    public EhCacheManagerFactoryBean ehCacheManager() {
-        EhCacheManagerFactoryBean factoryBean = new EhCacheManagerFactoryBean();
-        factoryBean.setConfigLocation(new ClassPathResource("ehcache.xml"));
-        factoryBean.setShared(true);
-        return factoryBean;
-    }
-
+//    @Bean
+//    public RedisCacheConfiguration redisCacheConfiguration() {
+//        RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration
+//                .defaultCacheConfig()
+//                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()))
+//                .entryTtl(Duration.ofMinutes(5));
+//        return redisCacheConfiguration;
+//    }
+//
+//    @Bean
+//    public RedisCacheManager redisCacheManager(RedisConnectionFactory redisConnectionFactory, RedisCacheConfiguration redisCacheConfiguration) {
+//        return RedisCacheManager
+//                .builder(redisConnectionFactory)
+//                .cacheDefaults(redisCacheConfiguration)
+//                .build();
+//    }
 }
