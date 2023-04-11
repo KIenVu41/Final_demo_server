@@ -22,23 +22,6 @@ public class SongController {
     @Autowired
     private SongService songService;
 
-    @GetMapping("/songs")
-    public ResponseEntity<List<Song>> getAllSong(@RequestParam String name) {
-        try {
-            List<Song> songs = songService.fetchAllData(name);
-            if (songs == null) {
-                return ResponseEntity.notFound().build();
-            } else {
-                return ResponseEntity.ok(songs);
-            }
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return ResponseEntity.status(500).build();
-    }
-
     @GetMapping("/home")
     public ResponseEntity<List<Song>> getHomeSong() {
         try {
@@ -149,20 +132,5 @@ public class SongController {
             e.printStackTrace();
         }
         return ResponseEntity.status(500).build();
-    }
-
-    @GetMapping("/download/gzip")
-    public ResponseEntity<byte[]> downloadFile(@RequestParam String file) throws IOException {
-        String url = "https://firebasestorage.googleapis.com/v0/b/finaldemo-385a1.appspot.com/o/music%2FBeertalks%20(Acoustic%20Live).mp3?alt=media&token=42e904e6-7b22-47dd-86a4-d3d7c7d22e4a";
-        byte[] bytedata = songService.compressFile(url);
-        if (bytedata == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        headers.setContentDispositionFormData("attachment", "file.zip");
-        headers.setContentLength(bytedata.length);
-        return new ResponseEntity<byte[]>(bytedata, headers, HttpStatus.OK);
     }
 }
