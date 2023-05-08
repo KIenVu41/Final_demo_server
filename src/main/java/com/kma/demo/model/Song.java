@@ -6,6 +6,7 @@ import java.io.Serializable;
 
 @Data
 public class Song implements Serializable {
+    private int id;
     private String docId;
     private String artist;
     private Boolean featured;

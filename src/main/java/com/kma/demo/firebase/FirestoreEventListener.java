@@ -40,13 +40,13 @@ public class FirestoreEventListener {
                     for (DocumentChange dc : Objects.requireNonNull(snapshots).getDocumentChanges()) {
                         switch (dc.getType()) {
                             case ADDED:
-                                System.out.println("New user: " + dc.getDocument().getData());
+                                System.out.println("New song: " + dc.getDocument().getData());
                                 break;
                             case MODIFIED:
-                                System.out.println("Modified user: " + dc.getDocument().getData());
+                                System.out.println("Modified song: " + dc.getDocument().getData());
                                 break;
                             case REMOVED:
-                                System.out.println("Removed user: " + dc.getDocument().getData());
+                                System.out.println("Removed song: " + dc.getDocument().getData());
                                 break;
                             default:
                                 break;

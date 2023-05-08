@@ -133,4 +133,21 @@ public class SongController {
         }
         return ResponseEntity.status(500).build();
     }
+
+    @GetMapping("/songs")
+    public ResponseEntity<List<Song>> getAllSong(@RequestParam String name) {
+        try {
+            List<Song> songs = songService.fetchAllData(name);
+            if (songs == null) {
+                return ResponseEntity.notFound().build();
+            } else {
+                return ResponseEntity.ok(songs);
+            }
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.status(500).build();
+    }
 }

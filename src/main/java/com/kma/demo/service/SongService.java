@@ -23,7 +23,7 @@ import java.util.zip.GZIPOutputStream;
 @Service
 public class SongService {
 
-    @Cacheable("myCache")
+//    @Cacheable("myCache")
     public List<Song> pagination(int page) throws ExecutionException, InterruptedException {
         Firestore db = FirestoreClient.getFirestore();
         List<QueryDocumentSnapshot> documents = null;
@@ -41,7 +41,7 @@ public class SongService {
         return songs;
     }
 
-    @Cacheable("myCache")
+//    @Cacheable("myCache")
     public List<Song> featuredPagination(int page) throws ExecutionException, InterruptedException {
         Firestore db = FirestoreClient.getFirestore();
         List<QueryDocumentSnapshot> documents = null;
@@ -59,7 +59,7 @@ public class SongService {
         return songs;
     }
 
-    @Cacheable("myCache")
+//    @Cacheable("myCache")
     public List<Song> popularPagination(int page) throws ExecutionException, InterruptedException {
         Firestore db = FirestoreClient.getFirestore();
         List<QueryDocumentSnapshot> documents = null;
@@ -77,7 +77,7 @@ public class SongService {
         return songs;
     }
 
-    @Cacheable("myCache")
+//    @Cacheable("myCache")
     public List<Song> latestPagination(int page) throws ExecutionException, InterruptedException {
         Firestore db = FirestoreClient.getFirestore();
         List<QueryDocumentSnapshot> documents = null;
@@ -95,7 +95,7 @@ public class SongService {
         return songs;
     }
 
-    @Cacheable("myCache")
+//    @Cacheable("myCache")
     public byte[] compress(String urlStr, String fileName) {
         URL url = null;
         InputStream inputStream = null;
@@ -154,7 +154,7 @@ public class SongService {
         return document.toObject(Song.class).getCount();
     }
 
-    @Cacheable("myCache")
+//    @Cacheable("myCache")
     public List<Song> findHomeData() throws ExecutionException, InterruptedException {
         List<Song> songs = new ArrayList<>();
 
@@ -205,6 +205,29 @@ public class SongService {
             Song song = new Song();
             song = document.toObject(Song.class);
             song.setDocId(document.getId());
+            songs.add(song);
+        }
+        return songs;
+    }
+
+    public List<Song> fetchAllData(String name) throws ExecutionException, InterruptedException {
+        Firestore db = FirestoreClient.getFirestore();
+        List<QueryDocumentSnapshot> documents = null;
+        ApiFuture<QuerySnapshot> future = null;
+        if(name.isEmpty()) {
+            // asynchronously retrieve all documents
+            future = db.collection("songs").get();
+            // future.get() blocks on response
+            documents = future.get().getDocuments();
+        } else {
+            future = db.collection("songs").whereGreaterThanOrEqualTo("title", name).whereLessThanOrEqualTo("title", name + "\\uf7ff").get();
+            documents = future.get().getDocuments();
+        }
+
+        List<Song> songs = new ArrayList<>();
+        for (QueryDocumentSnapshot document : documents) {
+            Song song = new Song();
+            song = document.toObject(Song.class);
             songs.add(song);
         }
         return songs;
