@@ -144,6 +144,31 @@ public class SongService {
         return null;
     }
 
+    public byte[] download(String urlStr, String fileName) {
+        URL url = null;
+        InputStream inputStream = null;
+
+        try {
+            url = new URL(urlStr);
+            inputStream = url.openStream();
+            byte[] bytes = inputStream.readAllBytes();
+            System.out.println("Length before compress " + bytes.length);
+            inputStream.close();
+            return bytes;
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
     public int updateCount(String id) throws ExecutionException, InterruptedException {
         Firestore db = FirestoreClient.getFirestore();
         DocumentReference docRef = db.collection("songs").document(id);

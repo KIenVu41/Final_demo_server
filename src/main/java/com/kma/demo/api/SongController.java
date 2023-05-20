@@ -134,6 +134,21 @@ public class SongController {
         return ResponseEntity.status(500).build();
     }
 
+    @RequestMapping(path = "/download/unop", method = RequestMethod.GET)
+    public ResponseEntity<byte[]> download2(@RequestParam String url, @RequestParam String name) throws IOException {
+        try {
+            byte[] bytedata = songService.download(url, name);
+            if (bytedata == null) {
+                return ResponseEntity.notFound().build();
+            }
+
+            return ResponseEntity.ok(bytedata);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.status(500).build();
+    }
+
     @GetMapping("/songs")
     public ResponseEntity<List<Song>> getAllSong(@RequestParam String name) {
         try {
